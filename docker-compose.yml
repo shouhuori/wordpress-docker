@@ -1,0 +1,52 @@
+version: "3"
+services:
+
+   db:
+     image: mysql:5.7
+     command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci     
+     volumes:
+       - ./db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:5-fpm-alpine
+     restart: always
+     volumes:
+        - wordpress:/var/www/html
+        - ./wordpress/myTheme/:/var/www/html/wp-content/themes/myTheme
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+   webserver:
+    # nginx needs wordpress started first
+    depends_on:
+      - wordpress
+    image: nginx:1.15.12-alpine
+    container_name: webserver
+    restart: unless-stopped
+    # open nginx's ports to access our site!!!
+    # you can of course change your ports for development,
+    #    just make sure you listen to them in nginx
+    ports:
+      - "80:80"  
+      - "443:443" # for https later!
+    volumes:                                                                                        
+      # we will also mount wordpress to nginx's                                                     
+      #   html folder to easily serve it                                                            
+      - wordpress:/var/www/html                                                                     
+      # we need to add our own nginx-config folder                                                         
+      - ./nginx-conf/:/etc/nginx/conf.d
+      - ./ssl_data:/etc/nginx/ssl 
+volumes:
+  db_data:
+  wordpress:
