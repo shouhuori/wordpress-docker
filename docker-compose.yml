@@ -47,11 +47,9 @@ services:
       # we need to add our own nginx-config folder                                                         
       - ./nginx-conf/:/etc/nginx/conf.d
       - certbotdata:/etc/letsencrypt
-    networks:
-      - app-network
   certbot:
    depends_on:
-    - webserver
+     - webserver
    image: certbot/certbot
    container_name: certbot
    volumes:
@@ -61,7 +59,7 @@ services:
     - wordpress:/var/www/html
   # this command will generate the certificate.                                                   
   # make sure to change your -d and --email flags                                                 
-  command: 'certonly --webroot --webroot-path=/var/www/html --email 0224wc@gmail.com --agree-tos --no-eff-email --force-renewal -d  blog.100100.li'
+   command: certonly --webroot --webroot-path=/var/www/html --email 0224wc@gmail.com --agree-tos --no-eff-email --force-renewal -d  blog.100100.li
 volumes:
   db_data:
   wordpress:
