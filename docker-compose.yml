@@ -49,12 +49,12 @@ services:
       - certbotdata:/etc/letsencrypt
     networks:
       - app-network
-certbot:
-  depends_on:
+  certbot:
+   depends_on:
     - webserver
-  image: certbot/certbot
-  container_name: certbot
-  volumes:
+   image: certbot/certbot
+   container_name: certbot
+   volumes:
     # we save our directory of keys on our host server                                            
     - certbotdata:/etc/letsencrypt
     # we bind our wordpress site to the html root                                                 
