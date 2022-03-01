@@ -38,15 +38,15 @@ services:
     # you can of course change your ports for development,
     #    just make sure you listen to them in nginx
     ports:
-      - "80:80"
-      - "443:443" # for https later!
+      - "8080:8080"
+      - "8443:8443" # for https later!
     volumes:
       # we will also mount wordpress to nginx's                                                     
       #   html folder to easily serve it                                                            
       - wordpress:/var/www/html
       # we need to add our own nginx-config folder                                                         
       - ./nginx-conf/:/etc/nginx/conf.d
-      - ./ssl_data:/etc/ssl
+      - ./ssl_data:/etc/nginx/ssl
 volumes:
   db_data:
   wordpress:
